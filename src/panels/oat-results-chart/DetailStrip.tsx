@@ -105,7 +105,11 @@ export function DetailStrip(props: DetailStripProps): ReactElement {
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        <Typography variant="subtitle2" component="h3" sx={{ flexGrow: 1 }}>
+        <Typography
+          variant="subtitle2"
+          component="h3"
+          sx={{ flexGrow: 1, textTransform: "none" }}
+        >
           {ref} · {name}
         </Typography>
         <IconButton size="small" aria-label="Close details" onClick={onClose}>
