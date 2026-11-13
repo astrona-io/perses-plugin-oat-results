@@ -1,0 +1,32 @@
+{
+  "kind": "OATResultsChart",
+  "spec": {
+    "checks": [
+      "start",
+      "health",
+      "ports",
+      "smoke",
+      "perf",
+      "sbom",
+      "signature",
+      "llm_eval"
+    ],
+    "checkLabels": {
+      "llm_eval": "LLM eval",
+      "sbom": "SBOM"
+    },
+    "severityFilter": ["critical", "high"],
+    "linkTemplates": {
+      "logs": "https://logs.example.com/explore?query=%7Brun_id%3D%22${run_id}%22%7D",
+      "pipelineRun": "https://ci.example.com/runs/${run_id}",
+      "diff": "https://git.example.com/images/${image}/compare/${previous_tag}...${tag}"
+    },
+    "showOnlyLatestPerImage": true,
+    "showHistory": true,
+    "historyRuns": 10,
+    "durationFormat": {
+      "unit": "seconds",
+      "decimalPlaces": 1
+    }
+  }
+}

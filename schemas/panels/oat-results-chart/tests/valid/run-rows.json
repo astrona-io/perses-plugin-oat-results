@@ -1,0 +1,8 @@
+{
+  "kind": "OATResultsChart",
+  "spec": {
+    "showOnlyLatestPerImage": false,
+    "severityFilter": ["critical", "high", "medium", "low", "unknown"],
+    "linkTemplates": { "pipelineRun": "${run_url}" }
+  }
+}

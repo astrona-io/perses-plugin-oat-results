@@ -1,0 +1,4 @@
+{
+  "kind": "OATResultsChart",
+  "spec": { "linkTemplates": { "dashboard": "https://example.com" } }
+}
