@@ -9,7 +9,7 @@ services:
       - "127.0.0.1:${PUSHGATEWAY_PORT:-9091}:9091"
 
   fake-pipeline:
-    image: docker.io/curlimages/curl:8.11.1
+    image: docker.io/curlimages/curl:8.23.0
     entrypoint: ["/bin/sh", "/dev-oat/fake-pipeline.sh"]
     environment:
       PUSHGATEWAY_URL: http://pushgateway:9091
