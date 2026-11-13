@@ -1,0 +1,60 @@
+# Plugin Module: oat-results 
+
+### How to install
+
+This plugin requires React and React DOM 18.3.
+
+Install peer dependencies:
+
+```bash
+npm install react@^18.3.0 react-dom@^18.3.0
+```
+
+Install the plugin:
+
+```bash
+npm install @astrona-io/oat-results
+```
+
+The Perses UI packages your plugin depends on are now maintained in the [`perses/shared`](https://github.com/perses/shared) repository. If you need to develop against local copies of those packages, follow the linking instructions in that repo.
+
+## Development
+
+### Setup
+
+Use Node.js 24 or later and npm 11 or later.
+
+Install dependencies and format the generated source:
+
+```bash
+npm install
+npm run format
+```
+
+### Get Started
+
+Start the dev server:
+
+```bash
+npm run dev
+```
+
+Build the plugin for distribution:
+
+```bash
+npm run build
+```
+
+The build writes an ESM library, TypeScript declarations, and Module Federation assets to `dist/`.
+Publish the built package from that directory.
+
+Run the checks:
+
+```bash
+npm run lint
+npm run format:check
+npm run type-check
+npm test
+```
+
+Tests use Vitest and jsdom. Add tests alongside your source as `*.test.ts` or `*.test.tsx`.
