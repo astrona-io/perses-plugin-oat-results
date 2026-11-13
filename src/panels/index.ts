@@ -1,1 +1,1 @@
-export * from './oat-results-chart';
+export * from "./oat-results-chart";

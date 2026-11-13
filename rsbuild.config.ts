@@ -1,19 +1,22 @@
-import type { ModuleFederationOptions } from '@module-federation/rsbuild-plugin';
-import { pluginModuleFederation } from '@module-federation/rsbuild-plugin';
-import { defineConfig } from '@rsbuild/core';
-import { pluginReact } from '@rsbuild/plugin-react';
+import type { ModuleFederationOptions } from "@module-federation/rsbuild-plugin";
+import { pluginModuleFederation } from "@module-federation/rsbuild-plugin";
+import { defineConfig } from "@rsbuild/core";
+import { pluginReact } from "@rsbuild/plugin-react";
 
-import packageJson from './package.json' with { type: 'json' };
+import packageJson from "./package.json" with { type: "json" };
 
-const name = 'OATResults';
-const version = process.env.NODE_ENV === 'development' ? undefined : packageJson.version;
+const name = "OATResults";
+const version =
+  process.env.NODE_ENV === "development" ? undefined : packageJson.version;
 export const assetPrefix = `/plugins/${name}/`;
 const publicPath = version ? `/plugins/${name}~${version}/` : assetPrefix;
-const globalName = version ? `${name}_${version}`.replace(/[^a-zA-Z0-9_$]/g, '_') : name;
+const globalName = version
+  ? `${name}_${version}`.replace(/[^a-zA-Z0-9_$]/g, "_")
+  : name;
 
 // Expose the components that will be used in the UI, either Perses UI or embedded.
-const exposedModules: ModuleFederationOptions['exposes'] = [
-  { './OatResultsChart': './src/panels/oat-results-chart' },
+const exposedModules: ModuleFederationOptions["exposes"] = [
+  { "./OATResultsChart": "./src/panels/oat-results-chart" },
 ];
 
 export default defineConfig({
@@ -23,23 +26,29 @@ export default defineConfig({
     printUrls: process.env.PERSES_CLI
       ? ({ port, protocol }) => {
           // custom output for `percli plugin start` to detect port for dev server
-          console.log(`[PERSES_PLUGIN] NAME="${name}" PORT="${port}" PROTOCOL="${protocol}"\n`);
+          console.log(
+            `[PERSES_PLUGIN] NAME="${name}" PORT="${port}" PROTOCOL="${protocol}"\n`,
+          );
           console.log(`Local: ${protocol}://localhost:${port}`);
           return [];
         }
       : true,
-    cors: { origin: '*' },
+    cors: { origin: "*" },
   },
   dev: { assetPrefix },
-  source: { entry: { main: './src/index-federation.ts' } },
+  source: { entry: { main: "./src/index-federation.ts" } },
   output: {
     assetPrefix,
-    copy: [{ from: 'package.json' }, { from: 'README.md' }, { from: 'LICENSE', to: './LICENSE', toType: 'file' }],
+    copy: [
+      { from: "package.json" },
+      { from: "README.md" },
+      { from: "LICENSE", to: "./LICENSE", toType: "file" },
+    ],
     distPath: {
-      root: 'dist',
-      js: '__mf/js',
-      css: '__mf/css',
-      font: '__mf/font',
+      root: "dist",
+      js: "__mf/js",
+      css: "__mf/css",
+      font: "__mf/font",
     },
   },
   plugins: [
@@ -47,26 +56,32 @@ export default defineConfig({
     pluginModuleFederation({
       name,
       // Each installed version needs its own federation container.
-      ...(version ? { library: { type: 'global', name: globalName } } : {}),
+      ...(version ? { library: { type: "global", name: globalName } } : {}),
       exposes: exposedModules,
       shared: {
-        react: { requiredVersion: packageJson.peerDependencies.react, singleton: true },
-        'react-dom': { requiredVersion: packageJson.peerDependencies['react-dom'], singleton: true },
+        react: {
+          requiredVersion: packageJson.peerDependencies.react,
+          singleton: true,
+        },
+        "react-dom": {
+          requiredVersion: packageJson.peerDependencies["react-dom"],
+          singleton: true,
+        },
         echarts: { singleton: true },
-        'date-fns': { singleton: true },
-        'date-fns-tz': { singleton: true },
+        "date-fns": { singleton: true },
+        "date-fns-tz": { singleton: true },
         lodash: { singleton: true },
-        '@perses-dev/client': { singleton: true },
-        '@perses-dev/components': { singleton: true },
-        '@perses-dev/plugin-system': { singleton: true },
-        '@perses-dev/explore': { singleton: true },
-        '@perses-dev/dashboards': { singleton: true },
-        '@emotion/react': { requiredVersion: '^11.11.3', singleton: true },
-        '@emotion/styled': { singleton: true },
-        '@hookform/resolvers': { singleton: true },
-        '@tanstack/react-query': { singleton: true },
-        'react-hook-form': { singleton: true },
-        'react-router-dom': { singleton: true },
+        "@perses-dev/client": { singleton: true },
+        "@perses-dev/components": { singleton: true },
+        "@perses-dev/plugin-system": { singleton: true },
+        "@perses-dev/explore": { singleton: true },
+        "@perses-dev/dashboards": { singleton: true },
+        "@emotion/react": { requiredVersion: "^11.11.3", singleton: true },
+        "@emotion/styled": { singleton: true },
+        "@hookform/resolvers": { singleton: true },
+        "@tanstack/react-query": { singleton: true },
+        "react-hook-form": { singleton: true },
+        "react-router-dom": { singleton: true },
       },
       dts: false,
       runtime: false,
@@ -77,8 +92,8 @@ export default defineConfig({
     htmlPlugin: false,
     rspack: (config) => {
       config.output = config.output || {};
-      if (process.env.NODE_ENV !== 'development') {
-        config.output.publicPath = 'auto';
+      if (process.env.NODE_ENV !== "development") {
+        config.output.publicPath = "auto";
       }
       // Keep chunks from different installed versions out of each other's runtime.
       if (version) {
