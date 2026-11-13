@@ -1,0 +1,118 @@
+{
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "oat-results",
+    "project": "demo"
+  },
+  "spec": {
+    "display": {
+      "name": "OAT results"
+    },
+    "duration": "10m",
+    "refreshInterval": "15s",
+    "variables": [],
+    "panels": {
+      "latest": {
+        "kind": "Panel",
+        "spec": {
+          "display": {
+            "name": "Operational acceptance tests",
+            "description": "Newest run per image. Click a cell for its message, duration, run and links."
+          },
+          "plugin": {
+            "kind": "OATResultsChart",
+            "spec": {
+              "checkLabels": {
+                "llm_eval": "LLM eval",
+                "sbom": "SBOM"
+              },
+              "severityFilter": ["critical", "high"],
+              "linkTemplates": {
+                "logs": "https://logs.example.com/explore?run_id=${run_id}&check=${check}",
+                "pipelineRun": "${run_url}",
+                "diff": "https://registry.example.com/diff/${image}?from=${previous_tag}&to=${tag}"
+              },
+              "showOnlyLatestPerImage": true,
+              "showHistory": true,
+              "historyRuns": 10
+            }
+          },
+          "queries": [
+            {
+              "kind": "TimeSeriesQuery",
+              "spec": {
+                "plugin": {
+                  "kind": "PrometheusTimeSeriesQuery",
+                  "spec": {
+                    "query": "{__name__=~\"oat_.+|image_cve_total\"}"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      "runs": {
+        "kind": "Panel",
+        "spec": {
+          "display": {
+            "name": "Every run",
+            "description": "One row per run of each image in the time range."
+          },
+          "plugin": {
+            "kind": "OATResultsChart",
+            "spec": {
+              "checks": ["start", "health", "ports", "smoke", "perf"],
+              "showOnlyLatestPerImage": false,
+              "linkTemplates": {
+                "logs": "https://logs.example.com/explore?run_id=${run_id}&check=${check}",
+                "pipelineRun": "${run_url}",
+                "diff": "https://registry.example.com/diff/${image}?from=${previous_tag}&to=${tag}"
+              }
+            }
+          },
+          "queries": [
+            {
+              "kind": "TimeSeriesQuery",
+              "spec": {
+                "plugin": {
+                  "kind": "PrometheusTimeSeriesQuery",
+                  "spec": {
+                    "query": "{__name__=~\"oat_.+|image_cve_total\"}"
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "layouts": [
+      {
+        "kind": "Grid",
+        "spec": {
+          "items": [
+            {
+              "x": 0,
+              "y": 0,
+              "width": 24,
+              "height": 15,
+              "content": {
+                "$ref": "#/spec/panels/latest"
+              }
+            },
+            {
+              "x": 0,
+              "y": 15,
+              "width": 24,
+              "height": 12,
+              "content": {
+                "$ref": "#/spec/panels/runs"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

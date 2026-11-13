@@ -1,0 +1,40 @@
+# A local Perses with the plugin, a Pushgateway fed by a fake CVE patching pipeline, and the
+# Prometheus that scrapes it. Works with `podman compose` and `docker compose`; see the README.
+name: oat-results-dev
+
+services:
+  pushgateway:
+    image: docker.io/prom/pushgateway:v1.11.1
+    ports:
+      - "127.0.0.1:${PUSHGATEWAY_PORT:-9091}:9091"
+
+  fake-pipeline:
+    image: docker.io/curlimages/curl:8.11.1
+    entrypoint: ["/bin/sh", "/dev-oat/fake-pipeline.sh"]
+    environment:
+      PUSHGATEWAY_URL: http://pushgateway:9091
+      INTERVAL: "${INTERVAL:-30}"
+    volumes:
+      - ./oat-push.sh:/dev-oat/oat-push.sh:ro,z
+      - ./fake-pipeline.sh:/dev-oat/fake-pipeline.sh:ro,z
+    depends_on: [pushgateway]
+
+  prometheus:
+    image: docker.io/prom/prometheus:v3.5.0
+    command: ["--config.file=/etc/prometheus/prometheus.yml"]
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro,z
+    depends_on: [pushgateway]
+
+  perses:
+    image: docker.io/persesdev/perses:v0.55.1
+    command: ["--config", "/etc/perses/config.yaml"]
+    ports:
+      - "127.0.0.1:${PERSES_PORT:-8080}:8080"
+    volumes:
+      - ./perses.yaml:/etc/perses/config.yaml:ro,z
+      - ./provisioning:/etc/perses/provisioning:ro,z
+      - ./dashboards:/etc/perses/dashboards:ro,z
+      # Holds OATResults-<version>.tar.gz from `percli plugin build`.
+      - ./archive:/etc/perses/plugins-archive-oat-results:ro,z
+    depends_on: [prometheus]
