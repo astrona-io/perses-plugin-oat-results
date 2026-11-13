@@ -23,5 +23,9 @@
     "outFileExtension": "js"
   },
   "sourceMaps": true,
-  "exclude": ["\\.(stories|test)\\."]
+  "exclude": [
+    "\\.(stories|test)\\.",
+    "test-utils/",
+    "setup-tests\\."
+  ]
 }

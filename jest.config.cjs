@@ -9,6 +9,8 @@ module.exports = {
     "^.+\\.(ts|tsx|js|jsx)$": [
       "@swc/jest",
       {
+        // .swcrc is for the library build and excludes test files.
+        swcrc: false,
         jsc: {
           parser: { syntax: "typescript", tsx: true },
           transform: { react: { runtime: "automatic" } },
@@ -16,7 +18,12 @@ module.exports = {
       },
     ],
   },
+  // @perses-dev/* 0.55 ships ES modules only; let swc turn them (and their ESM-only deps) into CommonJS.
+  transformIgnorePatterns: [
+    "/node_modules/(?!(@perses-dev|lodash-es|date-fns|date-fns-tz|echarts|zrender|@module-federation|nanoid|uuid)/)",
+  ],
   moduleNameMapper: {
+    "\\.(css|less|scss)$": "<rootDir>/src/test-utils/style-stub.cjs",
     "^use-resize-observer$": "use-resize-observer/polyfilled",
   },
   setupFilesAfterEnv: ["<rootDir>/src/setup-tests.ts"],

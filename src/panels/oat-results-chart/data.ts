@@ -572,11 +572,16 @@ export function buildModel(
     }
   }
 
-  // How many dependents each blocked row holds back.
+  // How many dependents (at any depth) with skipped checks each blocked row holds back.
   for (const row of rows) {
     if (!row.hasSkipped || !row.blockedBy) continue;
-    const blocker = rowsById.get(row.blockedBy.rowId);
-    if (blocker) blocker.blockedDependents++;
+    let ancestor = row.parentId ? rowsById.get(row.parentId) : undefined;
+    while (ancestor) {
+      if (ancestor.blocked) ancestor.blockedDependents++;
+      ancestor = ancestor.parentId
+        ? rowsById.get(ancestor.parentId)
+        : undefined;
+    }
   }
 
   return { status: "ok", checks, rows, rowsById, ignoredSeries };
