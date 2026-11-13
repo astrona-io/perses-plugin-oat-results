@@ -78,6 +78,7 @@ jobs:
       - run: npm run lint
       - run: npm run type-check
       - run: npm test
+      - run: cue mod tidy --check
       - run: percli plugin test-schemas
       - run: npm run build
 
