@@ -20,7 +20,7 @@ services:
     depends_on: [pushgateway]
 
   prometheus:
-    image: docker.io/prom/prometheus:v3.5.0
+    image: docker.io/prom/prometheus:v3.16.0
     command: ["--config.file=/etc/prometheus/prometheus.yml"]
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro,z
